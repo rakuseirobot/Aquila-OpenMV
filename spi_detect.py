@@ -100,9 +100,10 @@ while(True):
             clock.tick()
             img = sensor.snapshot()
             img.binary([(114, 255)])
+
             h = img.find_template(ht, 0.55, step=8, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
-            s = img.find_template(st, 0.43, step=8, search=SEARCH_EX) #1/6の朝時点で0.45,電車内で保存済
-            u = img.find_template(ut, 0.56, step=8, search=SEARCH_EX)
+            s = img.find_template(st, 0.435, step=8, search=SEARCH_EX) #1/6の朝時点で0.45,電車内で保存済
+            u = img.find_template(ut, 0.54, step=8, search=SEARCH_EX)
             sermo = sermo_check()
             if (h or s or u or sermo):
                 blue_led.on()

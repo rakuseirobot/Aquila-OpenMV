@@ -55,9 +55,10 @@ while (True):
     #
     # Note1: ROI has to be smaller than the image and bigger than the template.
     # Note2: In diamond search, step and ROI are both ignored.
-    h = img.find_template(ht, 0.4, step=8, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
-    s = img.find_template(st, 0.4, step=8, search=SEARCH_EX)
-    u = img.find_template(ut, 0.46, step=8, search=SEARCH_EX)
+
+    h = img.find_template(ht, 0.55, step=8, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
+    s = img.find_template(st, 0.435, step=8, search=SEARCH_EX) #1/6の朝時点で0.45,電車内で保存済
+    u = img.find_template(ut, 0.54, step=8, search=SEARCH_EX)
     if h:
         img.draw_rectangle(h,color = (r, g, b))
         print("h")
