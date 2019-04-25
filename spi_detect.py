@@ -23,9 +23,9 @@ spi = pyb.SPI(2, pyb.SPI.SLAVE)
 spi.init(2,pyb.SPI.SLAVE, polarity = 0, phase = 0, bits = 8)
 sig = pyb.Pin("P3", pyb.Pin.OUT_PP,pyb.Pin.PULL_DOWN)
 pin = pyb.Pin("P9", pyb.Pin.IN, pull=pyb.Pin.PULL_UP)
-ht = image.Image("/H.pgm")
-st = image.Image("/S.pgm")
-ut = image.Image("/U.pgm")
+ht = image.Image("/H-UD.pgm")
+st = image.Image("/S-UD.pgm")
+ut = image.Image("/U-UD.pgm")
 i2c = I2C(scl="P4",sda="P5",freq=120000)
 led = pyb.Pin("P8", pyb.Pin.OUT_PP,pyb.Pin.PULL_NONE)
 clock = time.clock()
@@ -34,7 +34,8 @@ print(aaa)
 res={"h":False,"s":False,"u":False,"sermo":False}
 allow=False
 Trans=False
-sermo_thre=50  #温度用閾値
+sermo_thre=80  #温度用閾値
+STEP=5
 timout=4 #xmega timeout
 timflag=True
 
@@ -98,12 +99,16 @@ while(True):
             red_led.off()
             blue_led.on()
             clock.tick()
+            red_led.on()
+            green_led.on()
             img = sensor.snapshot()
+            red_led.off()
+            green_led.off()
             img.binary([(114, 255)])
 
-            h = img.find_template(ht, 0.55, step=8, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
-            s = img.find_template(st, 0.435, step=8, search=SEARCH_EX) #1/6の朝時点で0.45,電車内で保存済
-            u = img.find_template(ut, 0.54, step=8, search=SEARCH_EX)
+            h = img.find_template(ht, 0.54, step=STEP, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
+            s = img.find_template(st, 0.435, step=STEP, search=SEARCH_EX) #1/6の朝時点で0.45,電車内で保存済
+            u = img.find_template(ut, 0.53, step=STEP, search=SEARCH_EX)
             sermo = sermo_check()
             if (h or s or u or sermo):
                 blue_led.on()
