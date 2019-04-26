@@ -23,7 +23,7 @@ spi = pyb.SPI(2, pyb.SPI.SLAVE)
 spi.init(2,pyb.SPI.SLAVE, polarity = 0, phase = 0, bits = 8)
 sig = pyb.Pin("P3", pyb.Pin.OUT_PP,pyb.Pin.PULL_DOWN)
 pin = pyb.Pin("P9", pyb.Pin.IN, pull=pyb.Pin.PULL_UP)
-ht = image.Image("/H-UDs.pgm")
+ht = image.Image("/H-UDS.pgm")
 st = image.Image("/S-UDS.pgm")
 ut = image.Image("/U-UDS.pgm")
 i2c = I2C(scl="P4",sda="P5",freq=120000)
@@ -104,9 +104,9 @@ while(True):
             img = sensor.snapshot()
             red_led.off()
             green_led.off()
-            for blob in img.find_blobs([(37, 56, 7, 92, -126, 88)], pixels_threshold=200, area_threshold=200):
-                img.draw_rectangle(blob.rect(),color = (r, g, b))
-                img.draw_cross(blob.cx(), blob.cy(),color = (r, g, b))
+            if img.find_blobs([(37, 56, 7, 92, -126, 88)], pixels_threshold=200, area_threshold=200):
+                #img.draw_rectangle(blob.rect(),color = (r, g, b))
+                #img.draw_cross(blob.cx(), blob.cy(),color = (r, g, b))
                 print("Lenga!!")
                 res["brick"]=True
             img.to_grayscale()
