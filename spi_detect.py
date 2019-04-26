@@ -112,11 +112,11 @@ while(True):
             img.to_grayscale()
             img.binary([(114, 255)])
 
-            h = img.find_template(ht, 0.54, step=STEP, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
+            h = img.find_template(ht, 0.6, step=STEP, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
             s = img.find_template(st, 0.435, step=STEP, search=SEARCH_EX) #1/6の朝時点で0.45,電車�??で保存�?
-            u = img.find_template(ut, 0.53, step=STEP, search=SEARCH_EX)
+            u = img.find_template(ut, 0.4, step=STEP, search=SEARCH_EX)
             sermo = sermo_check()
-            if (h or s or u or sermo or res["brick"]):
+            if (h or s) or (u or sermo) or (res["brick"]):
                 blue_led.on()
                 green_led.on()
                 Trans=True
@@ -140,7 +140,7 @@ while(True):
                 blue_led.off()
                 #print("reback")
                 aaa=0
-                if res["brick"] == True:
+                if res["brick"]:
                     aaa=10
                 else:
                     aaa=0
