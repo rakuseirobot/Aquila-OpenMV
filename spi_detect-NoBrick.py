@@ -17,21 +17,21 @@ rtc.datetime((2000, 0, 0, 0, 0, 0, 0, 0))
 sensor.reset()
 sensor.set_contrast(1)
 sensor.set_gainceiling(16)
-sensor.set_framesize(sensor.QQQVGA)
-sensor.set_pixformat(sensor.RGB565)
+sensor.set_framesize(sensor.QQVGA)
+sensor.set_pixformat(sensor.GRAYSCALE)
 spi = pyb.SPI(2, pyb.SPI.SLAVE)
 spi.init(2,pyb.SPI.SLAVE, polarity = 0, phase = 0, bits = 8)
 sig = pyb.Pin("P3", pyb.Pin.OUT_PP,pyb.Pin.PULL_DOWN)
 pin = pyb.Pin("P9", pyb.Pin.IN, pull=pyb.Pin.PULL_UP)
-ht = image.Image("/H-UDs.pgm")
-st = image.Image("/S-UDS.pgm")
-ut = image.Image("/U-UDS.pgm")
+ht = image.Image("/H-UD.pgm")
+st = image.Image("/S-UD.pgm")
+ut = image.Image("/U-UD.pgm")
 i2c = I2C(scl="P4",sda="P5",freq=120000)
 led = pyb.Pin("P8", pyb.Pin.OUT_PP,pyb.Pin.PULL_NONE)
 clock = time.clock()
 aaa=int(0)
 print(aaa)
-res={"h":False,"s":False,"u":False,"sermo":False,"brick":False}
+res={"h":False,"s":False,"u":False,"sermo":False}
 allow=False
 Trans=False
 sermo_thre=80  #温度用閾値
@@ -104,19 +104,13 @@ while(True):
             img = sensor.snapshot()
             red_led.off()
             green_led.off()
-            for blob in img.find_blobs([(37, 56, 7, 92, -126, 88)], pixels_threshold=200, area_threshold=200):
-                img.draw_rectangle(blob.rect(),color = (r, g, b))
-                img.draw_cross(blob.cx(), blob.cy(),color = (r, g, b))
-                print("Lenga!!")
-                res["brick"]=True
-            img.to_grayscale()
             img.binary([(114, 255)])
 
             h = img.find_template(ht, 0.54, step=STEP, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
             s = img.find_template(st, 0.435, step=STEP, search=SEARCH_EX) #1/6の朝時点で0.45,電車�??で保存�?
             u = img.find_template(ut, 0.53, step=STEP, search=SEARCH_EX)
             sermo = sermo_check()
-            if (h or s or u or sermo or res["brick"]):
+            if (h or s or u or sermo):
                 blue_led.on()
                 green_led.on()
                 Trans=True
@@ -140,22 +134,18 @@ while(True):
                 blue_led.off()
                 #print("reback")
                 aaa=0
-                if res["brick"] == True:
-                    aaa=10
-                else:
-                    aaa=0
                 if res["u"] and not (res["s"] or res["h"] or res["sermo"]):
-                    aaa+=5
+                    aaa=5
                 elif res["s"] and not (res["u"] or res["h"] or res["sermo"]):
-                    aaa+=4
+                    aaa=4
                 elif res["h"] and not (res["s"] or res["u"] or res["sermo"]):
-                    aaa+=3
+                    aaa=3
                 elif res["sermo"] and not (res["s"] or res["h"] or res["u"]):
-                    aaa+=6
+                    aaa=6
                 elif not (res["h"] or res["s"] or res["u"]):
-                    aaa+=8
+                    aaa=8
                 else:
-                    aaa+=7
+                    aaa=7
                 #ss.disable()
                 sig.value(0)
 
@@ -191,7 +181,6 @@ while(True):
                 res["s"]=False
                 res["h"]=False
                 res["sermo"]=False
-                res["brick"]=False
                 Trans=False
                 allow=False
                 #print(pin.value())
