@@ -35,7 +35,7 @@ sensor.reset()
 sensor.set_contrast(1)
 sensor.set_gainceiling(16)
 # Max resolution for template matching with SEARCH_EX is QQVGA
-sensor.set_framesize(sensor.QQQVGA)
+sensor.set_framesize(sensor.QQVGA)
 """
 sensor.QQCIF: 88x72
 sensor.QCIF: 176x144
@@ -69,9 +69,9 @@ sensor.set_pixformat(sensor.RGB565)
 
 # Load template.
 # Template should be a small (eg. 32x32 pixels) grayscale image.
-ht = image.Image("/H-UDS.pgm")
-st = image.Image("/S-UDS.pgm")
-ut = image.Image("/U-UDS.pgm")
+ht = image.Image("/H-UE.pgm")
+st = image.Image("/S-UE.pgm")
+ut = image.Image("/U-UE.pgm")
 
 brick=False
 
@@ -90,9 +90,9 @@ while (True):
     img = sensor.snapshot()
     red_led.off()
     green_led.off()
-    for blob in img.find_blobs([(37, 56, 7, 92, -126, 88)], pixels_threshold=200, area_threshold=200):
-        #img.draw_rectangle(blob.rect(),color = (r, g, b))
-        #img.draw_cross(blob.cx(), blob.cy(),color = (r, g, b))
+    for blob in img.find_blobs([(33, 56, 30, 78, -128, 85)], pixels_threshold=200, area_threshold=200):
+        img.draw_rectangle(blob.rect(),color = (r, g, b))
+        img.draw_cross(blob.cx(), blob.cy(),color = (r, g, b))
         print("Lenga!!")
         brick=True
     img.to_grayscale()
@@ -106,17 +106,18 @@ while (True):
     # Note1: ROI has to be smaller than the image and bigger than the template.
     # Note2: In diamond search, step and ROI are both ignored.
 
-    h = img.find_template(ht, 0.6, step=5, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
+    #h = img.find_template(ht, 0.55, step=5, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
     s = img.find_template(st, 0.435, step=5, search=SEARCH_EX) #1/6の朝時点で0.45,電車内で保存済
-    u = img.find_template(ut, 0.4, step=5, search=SEARCH_EX)
-    if h:
-        img.draw_rectangle(h,color = (r, g, b))
-        print("h")
+    u = img.find_template(ut, 0.45, step=5, search=SEARCH_EX)
+    #if h:
+    #    img.draw_rectangle(h,color = (r, g, b))
+    #    print("h")
     if s:
         img.draw_rectangle(s,color = (r, g, b))
         print("s")
     if u:
         img.draw_rectangle(u,color = (r, g, b))
         print("u")
+
 
     print(clock.fps())

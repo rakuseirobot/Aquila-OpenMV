@@ -17,15 +17,15 @@ rtc.datetime((2000, 0, 0, 0, 0, 0, 0, 0))
 sensor.reset()
 sensor.set_contrast(1)
 sensor.set_gainceiling(16)
-sensor.set_framesize(sensor.QQQVGA)
+sensor.set_framesize(sensor.QQVGA)
 sensor.set_pixformat(sensor.RGB565)
 spi = pyb.SPI(2, pyb.SPI.SLAVE)
 spi.init(2,pyb.SPI.SLAVE, polarity = 0, phase = 0, bits = 8)
 sig = pyb.Pin("P3", pyb.Pin.OUT_PP,pyb.Pin.PULL_DOWN)
 pin = pyb.Pin("P9", pyb.Pin.IN, pull=pyb.Pin.PULL_UP)
-ht = image.Image("/H-UDS.pgm")
-st = image.Image("/S-UDS.pgm")
-ut = image.Image("/U-UDS.pgm")
+ht = image.Image("/H-UE.pgm")
+ut = image.Image("/U-UE.pgm")
+st = image.Image("/S-UE.pgm")
 i2c = I2C(scl="P4",sda="P5",freq=120000)
 led = pyb.Pin("P8", pyb.Pin.OUT_PP,pyb.Pin.PULL_NONE)
 clock = time.clock()
@@ -104,7 +104,7 @@ while(True):
             img = sensor.snapshot()
             red_led.off()
             green_led.off()
-            if img.find_blobs([(37, 56, 7, 92, -126, 88)], pixels_threshold=200, area_threshold=200):
+            if img.find_blobs([(33, 56, 30, 78, -128, 85)], pixels_threshold=200, area_threshold=200):
                 #img.draw_rectangle(blob.rect(),color = (r, g, b))
                 #img.draw_cross(blob.cx(), blob.cy(),color = (r, g, b))
                 print("Lenga!!")
@@ -112,20 +112,20 @@ while(True):
             img.to_grayscale()
             img.binary([(114, 255)])
 
-            h = img.find_template(ht, 0.6, step=STEP, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
-            s = img.find_template(st, 0.435, step=STEP, search=SEARCH_EX) #1/6の朝時点で0.45,電車�??で保存�?
-            u = img.find_template(ut, 0.4, step=STEP, search=SEARCH_EX)
+            #h = img.find_template(ht, 0.55, step=5, search=SEARCH_EX) #, roi=(10, 0, 60, 60))
+            s = img.find_template(st, 0.435, step=5, search=SEARCH_EX) #1/6の朝時点で0.45,電車内で保存済
+            u = img.find_template(ut, 0.45, step=5, search=SEARCH_EX)
             sermo = sermo_check()
-            if (h or s) or (u or sermo) or (res["brick"]):
+            if s or (u or sermo) or (res["brick"]):
                 blue_led.on()
                 green_led.on()
                 Trans=True
                 allow=False
                 slflag=True
-            if h:
-                img.draw_rectangle(h)
-                #print("h")
-                res["h"]=True
+            #if h:
+            #    img.draw_rectangle(h)
+            #    #print("h")
+            #    res["h"]=True
             if s:
                 img.draw_rectangle(s)
                 #print("s")
