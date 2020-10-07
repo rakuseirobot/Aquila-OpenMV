@@ -1,9 +1,7 @@
 # Aquila-OpenMV
-Aquilaｎ画像認識及びmlx90614制御とxmega間のSPI通信プログラムです。
+Aquilaｎ画像認識及びmlx90614制御とメインマイコン間のSPI通信プログラムです。
 
 Robocup Junior Rescue Maze Program
-
-このリポジトリは2019年度のAquilaのメインプログラムです。
 
 # Note
 
