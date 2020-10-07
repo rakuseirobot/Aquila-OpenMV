@@ -30,8 +30,10 @@ spi_detect-NoBrick.py が本番環境で動いていました。
 # Author
 
 * Shun Kayaki
-* Kyushu institute of Technology
-* shun@guetan.dev
+
+    Kyushu institute of Technology
+    
+    shun@guetan.dev
 
 * Emile
 
